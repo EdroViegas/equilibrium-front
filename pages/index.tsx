@@ -1,11 +1,13 @@
 import Head from "next/head";
 //import { LockClosedIcon } from '@heroicons/react/solid'
 import { useForm } from "react-hook-form";
-import { useContext, useEffect } from "react";
-import { AuthContext, resData, SignInData } from "../contexts/context";
+import { useContext } from "react";
+import { AuthContext, SignInData } from "../contexts/context";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
-import Router from "next/router";
+
+import toast, { Toaster } from "react-hot-toast";
+const notify = (message: string) => toast.error(message);
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
@@ -13,9 +15,9 @@ export default function Home() {
 
   async function handleSignIn(data: SignInData) {
     //Message here
-    const result = await signIn(data);
+    const { code, message } = await signIn(data);
 
-    if (result.code !== "SUCCESS") alert(result.message);
+    if (code !== "SUCCESS") notify(message);
   }
 
   return (
@@ -30,6 +32,7 @@ export default function Home() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
+          <Toaster />
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleSignIn)}>
           <input type="hidden" name="remember" defaultValue="true" />

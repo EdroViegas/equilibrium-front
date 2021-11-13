@@ -1,5 +1,9 @@
 import { createContext, useEffect, useState } from "react";
-import { recoverUserInformation, SignInRequest } from "../services/services";
+import {
+  checkToken,
+  recoverUserInformation,
+  SignInRequest,
+} from "../services/services";
 import { setCookie, parseCookies } from "nookies";
 import Router from "next/router";
 import { api } from "../services/api";
@@ -8,7 +12,12 @@ import { CommonHeaderProperties } from "../services/axios";
 type AuthContextType = {
   isAuthenticated: boolean;
   user: User | null;
-  signIn: (data: SignInData) => Promise<void>;
+  signIn: (data: SignInData) => Promise<responseData>;
+};
+
+type responseData = {
+  message: string;
+  code: string;
 };
 
 export type SignInData = {
@@ -31,7 +40,7 @@ export type resData = {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: any) {
   const [user, setUser] = useState<User | null>(null);
 
   const isAuthenticated = !!user;
@@ -43,17 +52,24 @@ export function AuthProvider({ children }) {
 
     if (token) {
       console.log(token);
-      recoverUserInformation().then((response) => {
-        console.log("USER DATA");
-        console.log(response.user);
-        setUser(response.user);
-      });
+      recoverUserInformation().then(
+        (response) => {
+          console.log("USER DATA");
+          console.log(response.user);
+          setUser(response.user);
+        },
+        (error) => {
+          /*console.log("ERROR OCCURRED");
+          console.log(error);
+          Router.push("/");*/
+        }
+      );
     }
   }, []);
 
   async function signIn({ email, password }: SignInData) {
     try {
-      const { code, message, token, user } = await SignInRequest({
+      const { code, message, token, user }: any = await SignInRequest({
         email,
         password,
       });

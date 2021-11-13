@@ -6,6 +6,7 @@ import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
 import { formatDate } from "../../helpers/helper_functions";
 import { api } from "../../services/api";
+import { CaseType } from "../../services/services";
 
 export default function Cases() {
   const { user } = useContext(AuthContext);
@@ -13,10 +14,15 @@ export default function Cases() {
 
   useEffect(() => {
     try {
-      const result = api.get("/cases").then((res) => {
-        const { cases } = res.data;
-        setCases(cases);
-      });
+      const result = api
+        .get("/cases")
+        .then((res) => {
+          const { cases } = res.data;
+          setCases(cases);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -71,11 +77,12 @@ export default function Cases() {
                         >
                           Telefone
                         </th>
+
                         <th
                           scope="col"
                           className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                         >
-                          E-mail
+                          Tipo de Teste
                         </th>
                         <th
                           scope="col"
@@ -99,40 +106,44 @@ export default function Cases() {
                       </tr>
                     </thead>
                     <tbody>
-                      {cases.map((item, index) => (
+                      {cases.map((item: any, index) => (
                         <Fragment key={item.id}>
                           <tr
                             className={
                               index % 2 == 0 ? "bg-white" : "bg-gray-100"
                             }
                           >
-                            <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-500">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs    font-light  uppercase text-black">
                               # {item.id}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               {item.name}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
                               {item.address}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
                               {item.phone}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                              {item.email}
+
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
+                              {item.test_type}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
                               {item.place}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
                               {formatDate(item.test_date)}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                              <a
-                                href="#"
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                Edit
+                              <Link href={`/cases/${item.id}`}>
+                                <a className="transition duration-500 ease-in-out bg-gray-600  hover:bg-black transform hover:-translate-y-1 hover:scale-110   px-2 py-1  text-white text-xs font-light   uppercase  rounded-md  cursor-pointer ">
+                                  Ver caso
+                                </a>
+                              </Link>
+
+                              <a className="ml-2 transition duration-500 ease-in-out  bg-primary  hover:bg-red-700 transform hover:-translate-y-1 hover:scale-110   px-2 py-1  text-white text-xs font-light   rounded-md uppercase  cursor-pointer ">
+                                Eliminar
                               </a>
                             </td>
                           </tr>

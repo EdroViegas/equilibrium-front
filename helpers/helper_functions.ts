@@ -1,4 +1,4 @@
-export function formatDate(data: string) {
+export function formatDateTime(data: string) {
   const date = new Date(data);
 
   const localDate = date.toLocaleDateString();
@@ -9,7 +9,8 @@ export function formatDate(data: string) {
   return dateTime;
 }
 
-function getDifferenceInDays(date1, date2) {
-  const diffInMs = Math.abs(date2 - date1);
-  return diffInMs / (1000 * 60 * 60);
+export function formatDate(data: string) {
+  const date = new Date(data);
+
+  return date.toLocaleDateString();
 }

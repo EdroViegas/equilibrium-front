@@ -24,7 +24,7 @@ export default function AddCase() {
   return (
     <div>
       <Head>
-        <title>Novo caso positivo</title>
+        <title>Novo contacto</title>
       </Head>
       <TopMenu user={user} />
 
@@ -51,21 +51,7 @@ export default function AddCase() {
                   placeholder="Nome"
                 />
               </div>
-              <div>
-                <label htmlFor="address" className="sr-only">
-                  Endereço
-                </label>
-                <input
-                  {...register("address")}
-                  id="address"
-                  name="address"
-                  type="text"
-                  autoComplete="current-address"
-                  required
-                  className="appearance-none rounded-md  relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Endereço"
-                />
-              </div>
+
               <div className="text-sm">
                 <input
                   {...register("email")}
@@ -78,64 +64,16 @@ export default function AddCase() {
                   placeholder="E-mail"
                 />
               </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="">
-                <label htmlFor="phone" className="sr-only">
-                  Telefone
-                </label>
+              <div className="text-sm">
                 <input
                   {...register("phone")}
                   id="phone"
                   name="phone"
                   type="phone"
-                  autoComplete="current-phone"
+                  autoComplete="phone"
                   required
                   className="appearance-none  rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Telefone"
-                />
-              </div>
-
-              <div className="text-sm">
-                <select
-                  {...register("testType")}
-                  id="testType"
-                  name="testType"
-                  required
-                  className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="E-mail"
-                >
-                  <option value="RT-PCR">RT-PCR</option>
-                  <option value="TDR Antigeno (Ags)">TDR Antigeno (Ags)</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="">
-                <input
-                  {...register("place")}
-                  id="place"
-                  name="place"
-                  type="text"
-                  autoComplete="current-place"
-                  required
-                  className="appearance-none  rounded-md  relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Local da Testagem"
-                />
-              </div>
-
-              <div className="text-sm">
-                <input
-                  {...register("testDate")}
-                  id="testDate"
-                  name="testDate"
-                  type="date"
-                  autoComplete="current-testDate"
-                  required
-                  className="appearance-none  rounded-md relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Data testagem"
+                  placeholder="Phone"
                 />
               </div>
             </div>

@@ -13,11 +13,7 @@ export default function TopMenu({ user }: any) {
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <img
-                    className="h-8 w-8"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                    alt="Workflow"
-                  />
+                  <h2>Image Here</h2>
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
@@ -30,12 +26,6 @@ export default function TopMenu({ user }: any) {
                     <Link href="/cases">
                       <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                         Casos
-                      </a>
-                    </Link>
-
-                    <Link href="/contactss">
-                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                        Contactos
                       </a>
                     </Link>
                   </div>
@@ -118,11 +108,6 @@ export default function TopMenu({ user }: any) {
               <Link href="/cases">
                 <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
                   Casos
-                </a>
-              </Link>
-              <Link href="/contacts">
-                <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                  Contactos
                 </a>
               </Link>
             </div>
