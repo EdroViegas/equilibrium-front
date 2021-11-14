@@ -1,23 +1,33 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import Head from "next/head";
-
-import TopMenu from "../../components/menu";
-import { AuthContext } from "../../contexts/context";
-import { useForm } from "react-hook-form";
-import { CaseType, registerCase } from "../../services/services";
 import Router from "next/router";
+import { useForm } from "react-hook-form";
+import { parseCookies } from "nookies";
+import { GetServerSideProps } from "next";
+import Image from "next/image";
+import { AuthContext } from "../../../contexts/context";
+import {
+  CaseType,
+  ContactType,
+  getCase,
+  registerCase,
+  registerContact,
+} from "../../../services/services";
+import TopMenu from "../../../components/menu";
+import { getAPIClient } from "../../../services/axios";
 
-export default function AddCase() {
+export default function AddCase({ caso }: any) {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit } = useForm();
 
-  async function handleRegister(data: CaseType) {
+  async function handleRegister(data: ContactType) {
     console.log(data);
-    const { code, message } = await registerCase(data, user?.id as number);
+
+    const { code, message } = await registerContact(data, caso.id as number);
 
     console.log(message);
     if (code === "SUCCESS") {
-      Router.push("/cases");
+      Router.push(`/cases/${caso.id}`);
     }
   }
 
@@ -34,7 +44,20 @@ export default function AddCase() {
             className="mt-8 space-y-4 px-6 py-6 shadow-lg rounded-lg"
             onSubmit={handleSubmit(handleRegister)}
           >
-            <h1>Adicionar caso positivo</h1>
+            <div className=" flex gap-x-2 items-center  border-gray-400 p-1 rounded bg-gray-100 shadow-sm">
+              <Image
+                src="/img/1.jpg"
+                height={35}
+                width={35}
+                alt="Recipe"
+                className=" object-cover rounded-full   shadow-md "
+              />
+              <h2 className="text-xs ">
+                Adicionando novo contacto para
+                <span className="text-red-500 font-bold"> {caso.name}</span>
+              </h2>
+            </div>
+            <h1>Contacto</h1>
             <div className="  space-y-4">
               <div>
                 <label htmlFor="name" className="sr-only">
@@ -93,3 +116,34 @@ export default function AddCase() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
+  const { ["equilibrium.token"]: token } = parseCookies(ctx);
+  const id = ctx.query.idCase;
+  const caso = await getCase(apiClient, id);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  if (!caso) {
+    return {
+      redirect: {
+        destination: "/cases",
+        permanent: true,
+      },
+    };
+  }
+
+  return {
+    props: {
+      caso,
+    },
+  };
+};

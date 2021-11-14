@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 export function formatDateTime(data: string) {
   const date = new Date(data);
 
@@ -14,3 +16,6 @@ export function formatDate(data: string) {
 
   return date.toLocaleDateString();
 }
+
+export const notify = (message: string) => toast.success(message);
+export const notifyError = (message: string) => toast.error(message);

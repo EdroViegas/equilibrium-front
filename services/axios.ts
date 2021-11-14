@@ -1,5 +1,5 @@
 import axios, { HeadersDefaults } from "axios";
-import { useRouter } from "next/router";
+
 import { parseCookies } from "nookies";
 
 export interface CommonHeaderProperties extends HeadersDefaults {

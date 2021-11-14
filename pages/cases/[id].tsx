@@ -4,22 +4,47 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { parseCookies } from "nookies";
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 
 import toast, { Toaster } from "react-hot-toast";
-import { isContext } from "vm";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
-import { formatDate } from "../../helpers/helper_functions";
-import { api } from "../../services/api";
+import {
+  formatDate,
+  notify,
+  notifyError,
+} from "../../helpers/helper_functions";
 import { getAPIClient } from "../../services/axios";
-import { getCase } from "../../services/services";
-const notify = () => toast("Here is your toast.");
+import { getCase, removeContact } from "../../services/services";
+import { api } from "../../services/api";
 
-export default function Case({ caso }) {
+export default function Case({ caso }: any) {
   const { user } = useContext(AuthContext);
+  const [contatcs, setContacts] = useState(caso.contact);
 
-  console.log(`CASO : ${caso.id}`);
+  async function handleDeleteContact(contactId: number, caseId = caso.id) {
+    const answer = confirm("Deseja realmente apagar o contacto ?");
+
+    console.log(answer);
+    if (answer) {
+      try {
+        const { code, message } = await removeContact(contactId);
+        console.log(code, message);
+
+        if (code === "SUCCESS") {
+          const { contact } = await getCase(api, caseId);
+          console.log(contact);
+          setContacts(contact);
+          notify(message);
+        } else {
+          notifyError(message);
+        }
+      } catch (error) {
+        console.log(error);
+        notifyError("Ocorreu um erro ao eliminar contacto");
+      }
+    }
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen  ">
@@ -31,7 +56,7 @@ export default function Case({ caso }) {
       </header>
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8  ">
-        <div></div>
+        <Toaster />
         <div className="h-20 bg-indigo-500 mx-10 mt-5  rounded-t-md"></div>
 
         <div className=" mx-10  text-gray-600 grid md:grid-cols-2 lg:grid-cols-5  gap-2  ">
@@ -68,7 +93,7 @@ export default function Case({ caso }) {
               </div>
             </div>
 
-            <div className=" flex flex-col p-2 mt-10 bg-white rounded-sm border border-gray-100  ">
+            <div className=" flex flex-col p-2 mt-10 bg-white min-w-full rounded-sm border border-gray-100  ">
               <div>
                 <h1 className=" text-xs text-gray-400  uppercase ">
                   Local do teste
@@ -77,7 +102,7 @@ export default function Case({ caso }) {
                   {caso.place}
                 </h1>
               </div>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-between w-full">
                 <div>
                   <span className="text-xs text-gray-400  uppercase">
                     {" "}
@@ -89,8 +114,7 @@ export default function Case({ caso }) {
                 </div>
                 <div>
                   <span className="text-xs text-gray-400  uppercase">
-                    {" "}
-                    Data:{" "}
+                    Data:
                   </span>
                   <span className=" text-xs text-indigo-500 font-light uppercase">
                     {formatDate(caso.test_date)}
@@ -102,14 +126,17 @@ export default function Case({ caso }) {
 
           <main className=" pr-2  pt-1    max-h-96 overflow-y-auto   md:col-span-3 mt-12">
             <div className="flex flex-row  justify-between mb-4 border-b border-gray-300 pb-2">
-              <h2 className="uppercase">Contactos diretos do caso positivo</h2>
-              <Link href="/contact/add">
+              <h2 className="uppercase">
+                Contactos diretos do caso positivo (
+                <span className="text-indigo-600">{caso.contact.length}</span> )
+              </h2>
+              <Link href={`/contact/add/${caso.id}`}>
                 <a className="mr-4 transition duration-500 ease-in-out bg-gray-600  hover:bg-black transform hover:-translate-y-1 hover:scale-110   px-2 py-1  text-white text-xs font-medium   rounded-md uppercase  cursor-pointer ">
                   Adicionar
                 </a>
               </Link>
             </div>
-            {caso.contact.map((contact: any, index: any) => {
+            {contatcs.map((contact: any, index: any) => {
               return (
                 <Fragment key={contact.id}>
                   <div className="flex flex-row items-center justify-between gap-x-4 h-12 mb-3 bg-white border border-gray hover:border-blue-600 shadow-sm  pb-1  rounded transition duration-500 ease-in-out  transform hover:-translate-y-2 hover:scale-25 hover:shadow-lg ">
@@ -132,9 +159,12 @@ export default function Case({ caso }) {
                     </div>
 
                     <div className="flex flex-row items-center gap-x-2">
-                      <a className=" h-6 mb-1 transition duration-500 ease-in-out  bg-primary  hover:bg-red-600    px-1 py-1  text-white text-xs font-light   rounded-md uppercase  cursor-pointer ">
+                      <button
+                        onClick={() => handleDeleteContact(contact.id)}
+                        className=" h-6 mb-1 transition duration-500 ease-in-out  bg-primary  hover:bg-red-600    px-1 py-1  text-white text-xs font-light   rounded-md uppercase  cursor-pointer "
+                      >
                         Eliminar
-                      </a>
+                      </button>
                       <div className="flex flex-col items-center  mr-4 mt-2">
                         <div className="flex flex-row gap-x-2 transition duration-500    bg-gray-600  hover:bg-black  text-xs text-white  font-medium   rounded  p-1 ">
                           <PhoneSolid className="h-4 w-4" />

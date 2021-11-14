@@ -17,6 +17,21 @@ export type CaseType = {
   testType: string;
 };
 
+export type ContactType = {
+  name: string;
+  email: string;
+  phone: string;
+};
+
+export type UserType = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  is_active: number;
+  created_at: string;
+};
+
 export async function SignInRequest(data: SignInRequestData) {
   try {
     const response = await api.post("/login", data);
@@ -77,6 +92,33 @@ export async function registerCase(data: CaseType, userId: number) {
   };
 }
 
+export async function registerContact(data: ContactType, caseId: number) {
+  const response = await api.post("/contacts", {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    caseId,
+  });
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
+export async function removeContact(contactId: number) {
+  const response = await api.delete(`/contacts/${contactId}`);
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
 export async function getCase(apiClient: AxiosInstance, id: any) {
   try {
     const caseInfo = await apiClient.get(`/cases/${id}`);
@@ -88,6 +130,30 @@ export async function getCase(apiClient: AxiosInstance, id: any) {
     console.log(error);
     return;
   }
+}
+
+export async function getCases(apiClient: AxiosInstance) {
+  try {
+    const response = await apiClient.get(`/cases`);
+
+    const { cases } = response.data;
+
+    return cases;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
+
+export async function removeCase(caseId: number) {
+  const response = await api.delete(`/cases/${caseId}`);
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
 }
 
 export function checkToken() {
