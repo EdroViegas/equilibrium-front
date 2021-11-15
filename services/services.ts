@@ -72,6 +72,41 @@ export async function recoverUserInformation() {
   };
 }
 
+export async function getUsers(apiClient: AxiosInstance) {
+  try {
+    const response = await apiClient.get(`/users`);
+
+    const { users } = response.data;
+
+    return users;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
+
+export async function changeUserState(userId: number) {
+  const response = await api.get(`/users/state/${userId}`);
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
+export async function removeUser(userId: number) {
+  const response = await api.delete(`/users/${userId}`);
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
 export async function registerCase(data: CaseType, userId: number) {
   const response = await api.post("/cases", {
     name: data.name,
@@ -83,33 +118,6 @@ export async function registerCase(data: CaseType, userId: number) {
     testType: data.testType,
     userId,
   });
-
-  const { code, message } = response.data;
-
-  return {
-    code,
-    message,
-  };
-}
-
-export async function registerContact(data: ContactType, caseId: number) {
-  const response = await api.post("/contacts", {
-    name: data.name,
-    email: data.email,
-    phone: data.phone,
-    caseId,
-  });
-
-  const { code, message } = response.data;
-
-  return {
-    code,
-    message,
-  };
-}
-
-export async function removeContact(contactId: number) {
-  const response = await api.delete(`/contacts/${contactId}`);
 
   const { code, message } = response.data;
 
@@ -147,6 +155,33 @@ export async function getCases(apiClient: AxiosInstance) {
 
 export async function removeCase(caseId: number) {
   const response = await api.delete(`/cases/${caseId}`);
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
+export async function registerContact(data: ContactType, caseId: number) {
+  const response = await api.post("/contacts", {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    caseId,
+  });
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
+export async function removeContact(contactId: number) {
+  const response = await api.delete(`/contacts/${contactId}`);
 
   const { code, message } = response.data;
 

@@ -20,7 +20,7 @@ export default function Cases() {
 
   async function handleDeleteCase(caseId: number) {
     console.log(caseId);
-    const answer = confirm("Deseja realmente apagar o caso  ? ");
+    const answer = confirm("Deseja realmente eliminar o caso  ? ");
 
     if (answer) {
       try {

@@ -11,7 +11,14 @@ import {
   notifyError,
 } from "../../helpers/helper_functions";
 import { api } from "../../services/api";
-import { getCases, removeCase, UserType } from "../../services/services";
+import {
+  changeUserState,
+  getCases,
+  getUsers,
+  removeCase,
+  removeUser,
+  UserType,
+} from "../../services/services";
 import handler from "../api/hello";
 
 export default function Cases() {
@@ -19,27 +26,60 @@ export default function Cases() {
   const [cases, setCases] = useState([]);
   const [users, setUsers] = useState([]);
 
-  async function handleUserState(userId: number, currentState: number) {}
+  const isAdmin = user?.role === "administrador";
+  /*Used to verify if table row correspondes to current user and
+   is admin user , avoid deactivating himself*/
+  const isCurrentUser = (id: number) => isAdmin && id === user.id;
 
-  async function handleDeleteCase(caseId: number) {
-    console.log(caseId);
-    const answer = confirm("Deseja realmente apagar o caso  ? ");
+  async function handleUserState(
+    userId: number,
+    currentState: number,
+    canExecute: Boolean
+  ) {
+    if (canExecute) {
+      const stateName = currentState === 1 ? "desactivar" : "activar";
+      const answer = confirm(
+        `Está prestes a ${stateName} o usuário , deseja prosseguir ?`
+      );
 
-    if (answer) {
-      try {
-        const { code, message } = await removeCase(caseId);
-
-        if (code === "SUCCESS") {
-          const cases = await getCases(api);
-          console.log(cases);
-          setCases(cases);
-          notify(message);
-        } else {
-          notifyError(message);
+      if (answer) {
+        try {
+          const { code, message } = await changeUserState(userId);
+          console.log(message);
+          if (code === "SUCCESS") {
+            const users = await getUsers(api);
+            console.log(users);
+            setUsers(users);
+            notify(message);
+          }
+        } catch (error) {
+          console.log(error);
+          notifyError(`Ocorreu um erro ao ${stateName} o usuário`);
         }
-      } catch (error) {
-        console.log(error);
-        notifyError("Ocorreu um erro ao eliminar contacto");
+      }
+    }
+  }
+
+  async function handleDeleteUser(userId: number, canDelete: Boolean) {
+    if (canDelete) {
+      const answer = confirm("Deseja realmente eliminar o usuário  ? ");
+
+      if (answer) {
+        try {
+          const { code, message } = await removeUser(userId);
+
+          if (code === "SUCCESS") {
+            const users = await getUsers(api);
+            console.log(users);
+            setUsers(users);
+            notify(message);
+          } else {
+            notifyError(message);
+          }
+        } catch (error) {
+          console.log(error);
+          notifyError("Ocorreu um erro ao eliminar contacto");
+        }
       }
     }
   }
@@ -155,11 +195,20 @@ export default function Cases() {
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               <button
+                                onClick={() =>
+                                  handleUserState(
+                                    user.id,
+                                    user.is_active,
+                                    isAdmin && !isCurrentUser(user.id)
+                                  )
+                                }
                                 className={`${
-                                  user.is_active === 1
-                                    ? "bg-green-500"
-                                    : "bg-red-500"
-                                }  text-xs uppercase py-1 px-2 rounded text-white`}
+                                  isAdmin && !isCurrentUser(user.id)
+                                    ? user.is_active === 1
+                                      ? "bg-green-500"
+                                      : "bg-red-500"
+                                    : "bg-gray-500 cursor-default"
+                                }   text-xs uppercase py-1 px-2 rounded text-white`}
                               >
                                 {user.is_active === 1 ? "Activo" : "Inactivo"}
                               </button>
@@ -170,7 +219,12 @@ export default function Cases() {
 
                             <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
                               <button
-                                onClick={() => handleDeleteCase(user.id)}
+                                onClick={() =>
+                                  handleDeleteUser(
+                                    user.id,
+                                    isAdmin && !isCurrentUser(user.id)
+                                  )
+                                }
                                 className="ml-2 transition duration-500 ease-in-out  bg-primary  hover:bg-red-700 transform hover:-translate-y-1 hover:scale-110   px-2 py-1  text-white text-xs font-light   rounded-md uppercase  cursor-pointer "
                               >
                                 Eliminar
