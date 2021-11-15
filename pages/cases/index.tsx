@@ -1,6 +1,8 @@
 import { PhoneSolid } from "@graywolfai/react-heroicons";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { parseCookies } from "nookies";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
@@ -69,7 +71,7 @@ export default function Cases() {
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="flex flex-row  justify-end">
             <div className=" mb-5">
-              <Link href="cases/add">
+              <Link href="/cases/add">
                 <a className="transition duration-500 ease-in-out bg-gray-600  hover:bg-black transform hover:-translate-y-1 hover:scale-110   px-3 py-2  text-white text-xs font-medium   rounded-md uppercase  cursor-pointer ">
                   Adicionar
                 </a>
@@ -193,3 +195,20 @@ export default function Cases() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ["equilibrium.token"]: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

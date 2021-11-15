@@ -1,10 +1,28 @@
 import React, { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellSolid, MenuSolid, XSolid } from "@graywolfai/react-heroicons";
-import { User } from "../contexts/context";
+
 import Link from "next/link";
+import { logout } from "../services/services";
+import { destroyCookie } from "nookies";
+import Router from "next/router";
 
 export default function TopMenu({ user }: any) {
+  const isAdmin = user?.role === "administrador";
+
+  const handleLogout = async () => {
+    try {
+      const { code, message } = await logout();
+
+      if (code === "SUCCESS") {
+        destroyCookie(null, "equilibrium.token");
+        Router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -18,7 +36,9 @@ export default function TopMenu({ user }: any) {
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
                     <Link href="/users">
-                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <a
+                        className={`  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
+                      >
                         Usuários
                       </a>
                     </Link>
@@ -70,12 +90,15 @@ export default function TopMenu({ user }: any) {
                             className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                           >
                             <Menu.Item>
-                              <a
-                                href="#"
-                                className="block px-4 py-2 text-sm text-gray-700"
-                              >
-                                Terminar Sessão
-                              </a>
+                              <Link href="#">
+                                <a
+                                  href="#"
+                                  onClick={() => handleLogout()}
+                                  className="block px-4 py-2 text-sm text-gray-700"
+                                >
+                                  Terminar Sessão
+                                </a>
+                              </Link>
                             </Menu.Item>
                           </Menu.Items>
                         </Transition>
@@ -136,6 +159,7 @@ export default function TopMenu({ user }: any) {
               <div className="mt-3 px-2 space-y-1">
                 <a
                   href="#"
+                  onClick={() => handleLogout()}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                 >
                   Sair

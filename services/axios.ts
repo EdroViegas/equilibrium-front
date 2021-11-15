@@ -1,4 +1,5 @@
 import axios, { HeadersDefaults } from "axios";
+import Router from "next/router";
 
 import { parseCookies } from "nookies";
 
@@ -18,6 +19,25 @@ export function getAPIClient(ctx?: any) {
 
     return config;
   });
+
+  api.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        console.log("Acesso negado");
+        Router.push("/");
+      }
+      if (error.response.status === 404) {
+        console.log("Página não encontrada");
+      }
+      if (error.response.status === 500) {
+        console.log("Ocorreu um erro no servidor");
+      }
+      return error;
+    }
+  );
 
   if (token) {
     api.defaults.headers = {

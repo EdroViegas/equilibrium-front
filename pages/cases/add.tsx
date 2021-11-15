@@ -6,6 +6,8 @@ import { AuthContext } from "../../contexts/context";
 import { useForm } from "react-hook-form";
 import { CaseType, registerCase } from "../../services/services";
 import Router from "next/router";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 
 export default function AddCase() {
   const { user } = useContext(AuthContext);
@@ -155,3 +157,20 @@ export default function AddCase() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ["equilibrium.token"]: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

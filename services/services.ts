@@ -30,6 +30,8 @@ export type UserType = {
   role: string;
   is_active: number;
   created_at: string;
+  password: string;
+  confirm_password: string;
 };
 
 export async function SignInRequest(data: SignInRequestData) {
@@ -54,6 +56,17 @@ export async function SignInRequest(data: SignInRequestData) {
   return;
 }
 
+export async function logout() {
+  const response = await api.post(`/logout`);
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
 //Receives token
 
 export async function recoverUserInformation() {
@@ -72,6 +85,22 @@ export async function recoverUserInformation() {
   };
 }
 
+export async function registerUser(user: UserType) {
+  const response = await api.post("/users", {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    password: user.password,
+  });
+
+  const { code, message } = response.data;
+
+  return {
+    code,
+    message,
+  };
+}
+
 export async function getUsers(apiClient: AxiosInstance) {
   try {
     const response = await apiClient.get(`/users`);
@@ -83,6 +112,13 @@ export async function getUsers(apiClient: AxiosInstance) {
     console.log(error);
     return;
   }
+}
+
+export async function getCurrentUser(apiClient: AxiosInstance) {
+  const response = await apiClient.post("logged_user");
+
+  const { code, message, user } = response.data;
+  return user;
 }
 
 export async function changeUserState(userId: number) {
