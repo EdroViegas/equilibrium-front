@@ -101,7 +101,7 @@ export default function Cases() {
   return (
     <div>
       <Head>
-        <title>Casos</title>
+        <title>Usuários</title>
       </Head>
 
       <TopMenu user={user} page={"users"} />

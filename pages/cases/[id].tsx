@@ -48,7 +48,7 @@ export default function Case({ caso }: any) {
   return (
     <div className="bg-gray-50 min-h-screen  ">
       <Head>
-        <title>Dashboard </title>
+        <title>Informações sobre o caso</title>
       </Head>
       <header className="bg-white shadow ">
         <TopMenu user={user} page={"cases"} />
