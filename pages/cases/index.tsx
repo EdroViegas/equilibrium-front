@@ -144,7 +144,7 @@ export default function Cases() {
                             }
                           >
                             <td className="px-2 py-2 whitespace-nowrap text-xs    font-bold  uppercase text-black">
-                              # {caseInfo.id}
+                              # {index}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               {caseInfo.name}
