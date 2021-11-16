@@ -8,7 +8,7 @@ import { logout } from "../services/services";
 import { destroyCookie } from "nookies";
 import Router from "next/router";
 
-export default function TopMenu({ user }: any) {
+export default function TopMenu({ user, page }: any) {
   const isAdmin = user?.role === "administrador";
 
   const handleLogout = async () => {
@@ -47,14 +47,24 @@ export default function TopMenu({ user }: any) {
                   <div className="ml-10 flex items-baseline space-x-4">
                     <Link href="/users">
                       <a
-                        className={`  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
+                        className={`text-gray-300 ${
+                          page === "users"
+                            ? "bg-indigo-600"
+                            : "hover:bg-gray-700"
+                        }  hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
                       >
                         Usuários
                       </a>
                     </Link>
 
                     <Link href="/cases">
-                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <a
+                        className={`text-gray-300 ${
+                          page === "cases"
+                            ? "bg-indigo-600"
+                            : "hover:bg-gray-700"
+                        }  hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
+                      >
                         Casos
                       </a>
                     </Link>
@@ -139,12 +149,20 @@ export default function TopMenu({ user }: any) {
           <Disclosure.Panel className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link href="/users">
-                <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                <a
+                  className={`text-gray-300 ${
+                    page === "users" ? "bg-indigo-600" : "hover:bg-gray-700"
+                  }  hover:text-white block px-3 py-2 rounded-md text-base font-medium`}
+                >
                   Usuários
                 </a>
               </Link>
               <Link href="/cases">
-                <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                <a
+                  className={`text-gray-300 ${
+                    page === "cases" ? "bg-indigo-600" : "hover:bg-gray-700"
+                  }  hover:text-white block px-3 py-2 rounded-md text-base font-medium`}
+                >
                   Casos
                 </a>
               </Link>

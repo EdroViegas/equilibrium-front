@@ -51,7 +51,7 @@ export default function Case({ caso }: any) {
         <title>Dashboard </title>
       </Head>
       <header className="bg-white shadow ">
-        <TopMenu user={user} />
+        <TopMenu user={user} page={"cases"} />
       </header>
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8  ">

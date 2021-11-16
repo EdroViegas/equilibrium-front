@@ -43,7 +43,7 @@ export default function AddCase() {
       <Head>
         <title>Novo caso positivo</title>
       </Head>
-      <TopMenu user={user} />
+      <TopMenu user={user} page={"users"} />
 
       <Toaster />
 

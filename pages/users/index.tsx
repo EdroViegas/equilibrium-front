@@ -104,7 +104,7 @@ export default function Cases() {
         <title>Casos</title>
       </Head>
 
-      <TopMenu user={user} />
+      <TopMenu user={user} page={"users"} />
       <main>
         <Toaster />
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
