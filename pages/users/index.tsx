@@ -182,8 +182,8 @@ export default function Cases() {
                               index % 2 == 0 ? "bg-white" : "bg-gray-100"
                             }
                           >
-                            <td className="px-2 py-2 whitespace-nowrap text-xs    font-light  uppercase text-black">
-                              # {user.id}
+                            <td className="px-2 py-2 whitespace-nowrap text-xs    font-bold  uppercase text-black">
+                              # {++index}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               {user.name}

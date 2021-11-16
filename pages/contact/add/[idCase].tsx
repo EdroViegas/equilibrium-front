@@ -13,6 +13,8 @@ import {
 } from "../../../services/services";
 import TopMenu from "../../../components/menu";
 import { getAPIClient } from "../../../services/axios";
+import { ArrowCircleLeft } from "heroicons-react";
+import Link from "next/link";
 
 export default function AddCase({ caso }: any) {
   const { user } = useContext(AuthContext);
@@ -42,6 +44,12 @@ export default function AddCase({ caso }: any) {
             className="mt-8 space-y-4 px-6 py-6 shadow-lg rounded-lg"
             onSubmit={handleSubmit(handleRegister)}
           >
+            <Link href={`/cases/${caso.id}`}>
+              <a className="flex flex-row max-w-min text-left items-start pl-1 pr-2 py-1 border border-gray-200 bg-gray-50 hover:bg-gray-700  hover:text-white cursor-pointer text-indigo-400 rounded-md">
+                <ArrowCircleLeft />
+                <span className="ml-3">Retroceder</span>
+              </a>
+            </Link>
             <div className=" flex gap-x-2 items-center  border-gray-400 p-1 rounded bg-gray-100 shadow-sm">
               <Image
                 src="/img/1.jpg"
