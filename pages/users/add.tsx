@@ -3,6 +3,8 @@ import Head from "next/head";
 import { useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
+import Link from "next/link";
+import { ArrowCircleLeft } from "heroicons-react";
 import Router from "next/router";
 import { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
@@ -49,6 +51,12 @@ export default function AddCase() {
 
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 ">
+          <Link href={`/users`}>
+            <a className="flex flex-row max-w-min text-left items-start pl-1 pr-2 py-1 border border-gray-200 bg-gray-50 hover:bg-gray-700  hover:text-white cursor-pointer text-indigo-400 rounded-md">
+              <ArrowCircleLeft />
+              <span className="ml-3">Retroceder</span>
+            </a>
+          </Link>
           <form
             className="mt-8 space-y-4 px-6 py-6 shadow-lg rounded-lg"
             onSubmit={handleSubmit(handleRegister)}

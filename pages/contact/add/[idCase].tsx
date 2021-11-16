@@ -40,16 +40,16 @@ export default function AddCase({ caso }: any) {
 
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 ">
+          <Link href={`/cases/${caso.id}`}>
+            <a className="flex flex-row max-w-min text-left items-start pl-1 pr-2 py-1 border border-gray-200 bg-gray-50 hover:bg-gray-700  hover:text-white cursor-pointer text-indigo-400 rounded-md">
+              <ArrowCircleLeft />
+              <span className="ml-3">Retroceder</span>
+            </a>
+          </Link>
           <form
             className="mt-8 space-y-4 px-6 py-6 shadow-lg rounded-lg"
             onSubmit={handleSubmit(handleRegister)}
           >
-            <Link href={`/cases/${caso.id}`}>
-              <a className="flex flex-row max-w-min text-left items-start pl-1 pr-2 py-1 border border-gray-200 bg-gray-50 hover:bg-gray-700  hover:text-white cursor-pointer text-indigo-400 rounded-md">
-                <ArrowCircleLeft />
-                <span className="ml-3">Retroceder</span>
-              </a>
-            </Link>
             <div className=" flex gap-x-2 items-center  border-gray-400 p-1 rounded bg-gray-100 shadow-sm">
               <Image
                 src="/img/1.jpg"
