@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
 import {

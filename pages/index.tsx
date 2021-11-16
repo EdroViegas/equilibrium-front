@@ -1,36 +1,68 @@
 import Head from "next/head";
-//import { LockClosedIcon } from '@heroicons/react/solid'
 import { useForm } from "react-hook-form";
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext, SignInData } from "../contexts/context";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
-
 import toast, { Toaster } from "react-hot-toast";
+import { UserOutline } from "@graywolfai/react-heroicons";
+
 const notify = (message: string) => toast.error(message);
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
   const { signIn } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   async function handleSignIn(data: SignInData) {
     //Message here
     const { code, message } = await signIn(data);
 
-    if (code !== "SUCCESS") notify(message);
+    const result = toast
+      .promise(
+        signIn(data),
+        {
+          loading: "Efectuando login",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro ao efectuar o login",
+        },
+        {
+          success: {
+            style: {
+              minWidth: 0,
+              display: "none",
+            },
+
+            duration: 5000,
+            icon: "",
+          },
+        }
+      )
+      .then((result) => {
+        const { code, message } = result;
+
+        if (code !== "SUCCESS") notify(message);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Head>
-        <title>Home</title>
+        <title>Acessar a conta </title>
       </Head>
 
       <div className="max-w-sm w-full space-y-8">
         <div>
-          <div>Add image</div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+          <div className="flex justify-center">
+            <UserOutline className=" h-24 text-indigo-600 text-center" />
+          </div>
+          <h2 className="mt-6 text-center text-md font-bold uppercase text-gray-900">
+            Accessar a conta
           </h2>
           <Toaster />
         </div>
@@ -39,7 +71,7 @@ export default function Home() {
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email-address" className="sr-only">
-                Email address
+                E-mail
               </label>
               <input
                 {...register("email")}
@@ -49,12 +81,12 @@ export default function Home() {
                 autoComplete="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder="E-mail"
               />
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                Password
+                Senha
               </label>
               <input
                 {...register("password")}
@@ -64,34 +96,8 @@ export default function Home() {
                 autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                placeholder="Senha"
               />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember_me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Forgot your password?
-              </a>
             </div>
           </div>
 
@@ -101,7 +107,7 @@ export default function Home() {
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
-              Sign in
+              Entrar
             </button>
           </div>
         </form>

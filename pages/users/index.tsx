@@ -1,4 +1,3 @@
-import { PhoneSolid } from "@graywolfai/react-heroicons";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -15,21 +14,17 @@ import {
 import { api } from "../../services/api";
 import {
   changeUserState,
-  getCases,
   getUsers,
-  removeCase,
   removeUser,
   UserType,
 } from "../../services/services";
-import handler from "../api/hello";
 
 export default function Cases() {
   const { user } = useContext(AuthContext);
-  const [cases, setCases] = useState([]);
   const [users, setUsers] = useState([]);
 
   const isAdmin = user?.role === "administrador";
-  /*Used to verify if table row correspondes to current user and
+  /*Used to verify if table row corresponds to current user and
    is admin user , avoid deactivating himself*/
   const isCurrentUser = (id: number) => isAdmin && id === user.id;
 

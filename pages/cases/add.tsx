@@ -1,13 +1,12 @@
 import { useContext } from "react";
 import Head from "next/head";
-
-import TopMenu from "../../components/menu";
-import { AuthContext } from "../../contexts/context";
-import { useForm } from "react-hook-form";
-import { CaseType, registerCase } from "../../services/services";
 import Router from "next/router";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
+import { useForm } from "react-hook-form";
+import TopMenu from "../../components/menu";
+import { AuthContext } from "../../contexts/context";
+import { CaseType, registerCase } from "../../services/services";
 
 export default function AddCase() {
   const { user } = useContext(AuthContext);

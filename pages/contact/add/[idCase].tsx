@@ -7,10 +7,8 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { AuthContext } from "../../../contexts/context";
 import {
-  CaseType,
   ContactType,
   getCase,
-  registerCase,
   registerContact,
 } from "../../../services/services";
 import TopMenu from "../../../components/menu";

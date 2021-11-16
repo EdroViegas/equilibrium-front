@@ -1,10 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import {
-  checkToken,
-  recoverUserInformation,
-  SignInRequest,
-} from "../services/services";
-import { setCookie, parseCookies } from "nookies";
+import { recoverUserInformation, SignInRequest } from "../services/services";
+import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router from "next/router";
 import { api } from "../services/api";
 import { CommonHeaderProperties } from "../services/axios";
@@ -12,7 +8,7 @@ import { CommonHeaderProperties } from "../services/axios";
 type AuthContextType = {
   isAuthenticated: boolean;
   user: User | null;
-  signIn: (data: SignInData) => Promise<responseData>;
+  signIn: (data: SignInData) => Promise<any>;
 };
 
 type responseData = {
@@ -59,9 +55,11 @@ export function AuthProvider({ children }: any) {
           setUser(response.user);
         },
         (error) => {
-          /*console.log("ERROR OCCURRED");
+          console.log("ERROR OCCURRED");
           console.log(error);
-          Router.push("/");*/
+          //Apaga o token não valido - Remove not valid token
+          destroyCookie(null, "equilibrium.token");
+          return error;
         }
       );
     }
@@ -83,7 +81,7 @@ export function AuthProvider({ children }: any) {
       }
 
       setCookie(undefined, "equilibrium.token", token.token, {
-        maxAge: 60 * 60 * 24, // 1 hour
+        maxAge: 60 * 60 * 24 * 30 * 2, // 2 Months
         //expires:""
       });
 

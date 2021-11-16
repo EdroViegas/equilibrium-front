@@ -1,4 +1,3 @@
-import { PhoneSolid } from "@graywolfai/react-heroicons";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -14,7 +13,6 @@ import {
 } from "../../helpers/helper_functions";
 import { api } from "../../services/api";
 import { getCases, removeCase } from "../../services/services";
-import handler from "../api/hello";
 
 export default function Cases() {
   const { user } = useContext(AuthContext);
@@ -145,7 +143,7 @@ export default function Cases() {
                               index % 2 == 0 ? "bg-white" : "bg-gray-100"
                             }
                           >
-                            <td className="px-2 py-2 whitespace-nowrap text-xs    font-light  uppercase text-black">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs    font-bold  uppercase text-black">
                               # {caseInfo.id}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">

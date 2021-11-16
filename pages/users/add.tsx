@@ -1,22 +1,19 @@
 import React, { useContext } from "react";
 import Head from "next/head";
-
+import { useForm } from "react-hook-form";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
+import Router from "next/router";
+import { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
-import { useForm } from "react-hook-form";
+import { notifyError } from "../../helpers/helper_functions";
+import { getAPIClient } from "../../services/axios";
 import {
-  CaseType,
   getCurrentUser,
-  registerCase,
   registerUser,
   UserType,
 } from "../../services/services";
-import Router from "next/router";
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
-import { notifyError } from "../../helpers/helper_functions";
-import { Toaster } from "react-hot-toast";
-import { getAPIClient } from "../../services/axios";
 
 export default function AddCase() {
   const { user } = useContext(AuthContext);
