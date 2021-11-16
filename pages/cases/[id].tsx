@@ -61,14 +61,16 @@ export default function Case({ caso }: any) {
         <div className=" mx-10  text-gray-600 grid md:grid-cols-2 lg:grid-cols-5  gap-2  ">
           <div className="     md:col-span-2 xl:flex md:flex-col justify-center items-center  bg-workcation-200">
             <div className="flex  flex-col justify-center items-center">
-              <div className=" -mt-10 ">
-                <Image
-                  src="/img/1.jpg"
-                  height={80}
-                  width={80}
-                  alt="Recipe"
-                  className=" object-cover rounded-full   shadow-md "
-                />
+              <div className=" -mt-10  ">
+                <div className="border-4 border-gray-50 rounded-full">
+                  <Image
+                    src="/img/1.jpg"
+                    height={80}
+                    width={80}
+                    alt="Recipe"
+                    className=" object-cover  rounded-full   shadow-md "
+                  />
+                </div>
               </div>
               <div className=" text-sm  text-gray-500 font-bold ">
                 <h2>{caso.name}</h2>
@@ -140,13 +142,13 @@ export default function Case({ caso }: any) {
                 <Fragment key={contact.id}>
                   <div className="flex flex-row items-center justify-between gap-x-4 h-12 mb-3 bg-white border border-gray hover:border-blue-600 shadow-sm  pb-1  rounded transition duration-500 ease-in-out  transform hover:-translate-y-2 hover:scale-25 hover:shadow-lg ">
                     <div className="flex flex-row items-center gap-x-4">
-                      <div className="ml-4 mt-1">
+                      <div className="ml-4 mt-1 ">
                         <Image
                           src="/img/1.jpg"
                           height={35}
                           width={35}
                           alt="Recipe"
-                          className=" object-cover rounded-full   shadow-md "
+                          className=" object-cover  rounded-full   shadow-md "
                         />
                       </div>
                       <div className="text-xs font-bold text-indigo-400 ">

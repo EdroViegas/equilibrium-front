@@ -33,7 +33,7 @@ export default function TopMenu({ user }: any) {
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <h2>
+                  <Link href="/dashboard">
                     <Image
                       src="/img/icon.png"
                       height={35}
@@ -41,7 +41,7 @@ export default function TopMenu({ user }: any) {
                       alt="Recipe"
                       className=" object-cover   "
                     />
-                  </h2>
+                  </Link>
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
