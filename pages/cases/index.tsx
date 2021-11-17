@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
@@ -21,7 +21,14 @@ export default function Cases() {
   const [cases, setCases] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const { register, handleSubmit } = useForm();
-
+  const toastStyle = {
+    style: {
+      minWidth: 0,
+      display: "none",
+    },
+    duration: 5000,
+    icon: "",
+  };
   function removeSearching() {
     if (isSearching === true) {
       setIsSearching(false);
@@ -30,19 +37,27 @@ export default function Cases() {
   }
 
   function fillCases(state: any) {
-    try {
-      const result = api
-        .get("/cases")
-        .then((res) => {
-          const { cases } = res.data;
-          state(cases);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    const result = toast
+      .promise(
+        getCases(api),
+        {
+          loading: "Carregando os casos ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível obter os casos",
+        },
+        {
+          success: toastStyle,
+        }
+      )
+      .then((result) => {
+        const cases = result;
+        state(cases);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
   }
 
   function handleSearch(data: any) {
@@ -57,20 +72,12 @@ export default function Cases() {
           error: "Ocorreu um erro , não foi possível realizar o seu pedido",
         },
         {
-          success: {
-            style: {
-              minWidth: 0,
-              display: "none",
-            },
-
-            duration: 5000,
-            icon: "",
-          },
+          success: toastStyle,
         }
       )
       .then((result) => {
-        const { code, message, cases } = result;
-        console.log(cases);
+        const { cases } = result;
+
         setIsSearching(true);
         setCases(cases);
       })

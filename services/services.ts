@@ -185,7 +185,7 @@ export async function getCases(apiClient: AxiosInstance) {
     return cases;
   } catch (error) {
     console.log(error);
-    return;
+    return error;
   }
 }
 
