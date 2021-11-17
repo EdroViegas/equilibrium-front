@@ -18,19 +18,7 @@ export default function AddCase() {
   const { register, handleSubmit } = useForm();
   const [isInserting, setIsInserting] = useState(false);
 
-  async function handleRegister(data: CaseType) {
-    console.log(data);
-
-    /* const { code, message, caso } = await registerCase(
-      data,
-      user?.id as number
-    );
-
-    console.log(message);
-    if (code === "SUCCESS") {
-      Router.push(`/cases/${caso.id}`);
-    } */
-
+  function handleRegister(data: CaseType) {
     setIsInserting(true);
 
     toast
