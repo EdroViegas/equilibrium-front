@@ -39,7 +39,7 @@ export default function AddCase() {
         setIsInserting(false);
 
         if (code === "SUCCESS") {
-          // Router.push(`/cases/${caso.id}`);
+          Router.push(`/cases/${caso.id}`);
         } else {
           notifyError(message);
         }
@@ -222,7 +222,7 @@ export default function AddCase() {
                 className={` group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md  ${
                   !isInserting
                     ? "text-white bg-indigo-600 hover:bg-indigo-700"
-                    : "bg-black text-gray-400"
+                    : "bg-black text-gray-400 cursor-not-allowed"
                 } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                 disabled={isInserting}
               >
