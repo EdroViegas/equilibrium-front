@@ -1,5 +1,4 @@
-import { SearchCircleSolid, SearchSolid } from "@graywolfai/react-heroicons";
-import { SearchCircle, SearchCircleOutline } from "heroicons-react";
+import { SearchSolid, XSolid } from "@graywolfai/react-heroicons";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -20,12 +19,34 @@ import { getCases, removeCase, searchCase } from "../../services/services";
 export default function Cases() {
   const { user } = useContext(AuthContext);
   const [cases, setCases] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const { register, handleSubmit } = useForm();
 
-  async function handleSearch(data: any) {
+  function removeSearching() {
+    if (isSearching === true) {
+      setIsSearching(false);
+      fillCases(setCases);
+    }
+  }
+
+  function fillCases(state: any) {
+    try {
+      const result = api
+        .get("/cases")
+        .then((res) => {
+          const { cases } = res.data;
+          state(cases);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleSearch(data: any) {
     console.log(data);
-    const response = await searchCase(api, data);
-    console.log(response);
 
     const result = toast
       .promise(
@@ -50,6 +71,7 @@ export default function Cases() {
       .then((result) => {
         const { code, message, cases } = result;
         console.log(cases);
+        setIsSearching(true);
         setCases(cases);
       })
       .catch((error) => {
@@ -83,19 +105,7 @@ export default function Cases() {
   }
 
   useEffect(() => {
-    try {
-      const result = api
-        .get("/cases")
-        .then((res) => {
-          const { cases } = res.data;
-          setCases(cases);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    fillCases(setCases);
   }, []);
 
   return (
@@ -116,8 +126,8 @@ export default function Cases() {
               <div className="flex flex-row justify-between gap-2 mb-2">
                 <div className=" -space-y-px">
                   <div>
-                    <label htmlFor="password" className="sr-only">
-                      Senha
+                    <label htmlFor="search" className="sr-only">
+                      Pesquisar
                     </label>
                     <input
                       {...register("search")}
@@ -127,18 +137,25 @@ export default function Cases() {
                       autoComplete="current-search"
                       required
                       className="appearance-none rounded-none w-full px-3 py-2 border-b border-gray-300 placeholder-indigo-500 text-xs  uppercase text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                      placeholder="Pesquisar"
+                      placeholder="Nome"
                     />
                   </div>
                 </div>
 
-                <div>
+                <div className="flex flex-row justify-between">
                   <button
                     type="submit"
                     className="w-full flex justify-center  px-2  text-sm font-medium"
                   >
                     <SearchSolid className=" text-indigo-600 h-6 hover:text-gray-800" />
                   </button>
+
+                  <a
+                    onClick={() => removeSearching()}
+                    className={!isSearching ? "hidden" : "block"}
+                  >
+                    <XSolid className="text-red-400 hover:text-red-600  h-6 hover:text-gray-800" />
+                  </a>
                 </div>
               </div>
             </form>
