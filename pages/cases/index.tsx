@@ -80,25 +80,42 @@ export default function Cases() {
       });
   }
 
-  async function handleDeleteCase(caseId: number) {
+  function handleDeleteCase(caseId: number) {
     console.log(caseId);
     const answer = confirm("Deseja realmente eliminar o caso  ? ");
 
     if (answer) {
       try {
-        const { code, message } = await removeCase(caseId);
+        toast
+          .promise(
+            removeCase(caseId),
+            {
+              loading: "Eliminando caso ...",
+              success: () => <span>...</span>,
+              error: "Ocorreu um erro , não foi possível realizar o seu pedido",
+            },
+            {
+              success: toastStyle,
+            }
+          )
+          .then((result) => {
+            const { code, message } = result;
 
-        if (code === "SUCCESS") {
-          const cases = await getCases(api);
-          console.log(cases);
-          setCases(cases);
-          notify(message);
-        } else {
-          notifyError(message);
-        }
+            if (code === "SUCCESS") {
+              fillCases(setCases);
+              notify(message);
+            } else {
+              notifyError(message);
+            }
+          })
+          .catch((error) => {
+            // Getting the Error details.
+            console.error(error.message);
+            return error.message;
+          });
       } catch (error) {
         console.log(error);
-        notifyError("Ocorreu um erro ao eliminar contacto");
+        notifyError("Ocorreu um erro ao eliminar casocls");
       }
     }
   }
