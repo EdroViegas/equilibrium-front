@@ -189,6 +189,17 @@ export async function getCases(apiClient: AxiosInstance) {
   }
 }
 
+export async function searchCase(apiClient: AxiosInstance, data: any) {
+  try {
+    const response = await apiClient.post(`/cases/search`, data);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return { code: error, message: "Ocorreu um erro ao pesquisar" };
+  }
+}
+
 export async function removeCase(caseId: number) {
   const response = await api.delete(`/cases/${caseId}`);
 

@@ -1,9 +1,12 @@
+import { SearchCircleSolid, SearchSolid } from "@graywolfai/react-heroicons";
+import { SearchCircle, SearchCircleOutline } from "heroicons-react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { set, useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
 import {
@@ -12,11 +15,49 @@ import {
   notifyError,
 } from "../../helpers/helper_functions";
 import { api } from "../../services/api";
-import { getCases, removeCase } from "../../services/services";
+import { getCases, removeCase, searchCase } from "../../services/services";
 
 export default function Cases() {
   const { user } = useContext(AuthContext);
   const [cases, setCases] = useState([]);
+  const { register, handleSubmit } = useForm();
+
+  async function handleSearch(data: any) {
+    console.log(data);
+    const response = await searchCase(api, data);
+    console.log(response);
+
+    const result = toast
+      .promise(
+        searchCase(api, data),
+        {
+          loading: "Pesquisando ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível realizar o seu pedido",
+        },
+        {
+          success: {
+            style: {
+              minWidth: 0,
+              display: "none",
+            },
+
+            duration: 5000,
+            icon: "",
+          },
+        }
+      )
+      .then((result) => {
+        const { code, message, cases } = result;
+        console.log(cases);
+        setCases(cases);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
+  }
 
   async function handleDeleteCase(caseId: number) {
     console.log(caseId);
@@ -67,7 +108,41 @@ export default function Cases() {
       <main>
         <Toaster />
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="flex flex-row  justify-end">
+          <div className="flex flex-row  justify-between items-center">
+            <form
+              className="mt-8 space-y-6"
+              onSubmit={handleSubmit(handleSearch)}
+            >
+              <div className="flex flex-row justify-between gap-2 mb-2">
+                <div className=" -space-y-px">
+                  <div>
+                    <label htmlFor="password" className="sr-only">
+                      Senha
+                    </label>
+                    <input
+                      {...register("search")}
+                      id="search"
+                      name="search"
+                      type="text"
+                      autoComplete="current-search"
+                      required
+                      className="appearance-none rounded-none w-full px-3 py-2 border-b border-gray-300 placeholder-indigo-500 text-xs  uppercase text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Pesquisar"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center  px-2  text-sm font-medium"
+                  >
+                    <SearchSolid className=" text-indigo-600 h-6 hover:text-gray-800" />
+                  </button>
+                </div>
+              </div>
+            </form>
+
             <div className=" mb-5">
               <Link href="/cases/add">
                 <a className="transition duration-500 ease-in-out bg-gray-600  hover:bg-black transform hover:-translate-y-1 hover:scale-110   px-3 py-2  text-white text-xs font-medium   rounded-md uppercase  cursor-pointer ">

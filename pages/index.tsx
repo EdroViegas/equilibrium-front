@@ -12,12 +12,8 @@ const notify = (message: string) => toast.error(message);
 export default function Home() {
   const { register, handleSubmit } = useForm();
   const { signIn } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
 
-  async function handleSignIn(data: SignInData) {
-    //Message here
-    const { code, message } = await signIn(data);
-
+  function handleSignIn(data: SignInData) {
     const result = toast
       .promise(
         signIn(data),
