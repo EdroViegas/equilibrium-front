@@ -3,9 +3,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
+import { toastStyle } from "../../helpers/defaults";
 import {
   formatDate,
   notify,
@@ -28,6 +29,30 @@ export default function Cases() {
    is admin user , avoid deactivating himself*/
   const isCurrentUser = (id: number) => isAdmin && id === user.id;
 
+  function fillUsers(state: any) {
+    const result = toast
+      .promise(
+        getUsers(api),
+        {
+          loading: "Carregando usuários ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível listar usuários",
+        },
+        {
+          success: toastStyle,
+        }
+      )
+      .then((result) => {
+        const users = result;
+        state(users);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
+  }
+
   async function handleUserState(
     userId: number,
     currentState: number,
@@ -44,9 +69,7 @@ export default function Cases() {
           const { code, message } = await changeUserState(userId);
           console.log(message);
           if (code === "SUCCESS") {
-            const users = await getUsers(api);
-            console.log(users);
-            setUsers(users);
+            fillUsers(setUsers);
             notify(message);
           }
         } catch (error) {
@@ -66,9 +89,7 @@ export default function Cases() {
           const { code, message } = await removeUser(userId);
 
           if (code === "SUCCESS") {
-            const users = await getUsers(api);
-            console.log(users);
-            setUsers(users);
+            fillUsers(setUsers);
             notify(message);
           } else {
             notifyError(message);
@@ -82,20 +103,7 @@ export default function Cases() {
   }
 
   useEffect(() => {
-    try {
-      api
-        .get("/users")
-        .then((res) => {
-          const { users } = res.data;
-          setUsers(users);
-          console.log(users);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    fillUsers(setUsers);
   }, []);
 
   return (

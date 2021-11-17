@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
+import { toastStyle } from "../../helpers/defaults";
 import {
   formatDate,
   notify,
@@ -21,14 +22,7 @@ export default function Cases() {
   const [cases, setCases] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const { register, handleSubmit } = useForm();
-  const toastStyle = {
-    style: {
-      minWidth: 0,
-      display: "none",
-    },
-    duration: 5000,
-    icon: "",
-  };
+
   function removeSearching() {
     if (isSearching === true) {
       setIsSearching(false);
