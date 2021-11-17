@@ -27,6 +27,7 @@ export type User = {
   email: string;
   role: string;
   isActive: number;
+  genre: number;
 };
 
 export type resData = {

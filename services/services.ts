@@ -23,6 +23,8 @@ export type ContactType = {
   name: string;
   email: string;
   phone: string;
+  age: number;
+  genre: string;
 };
 
 export type UserType = {
@@ -34,6 +36,7 @@ export type UserType = {
   created_at: string;
   password: string;
   confirm_password: string;
+  genre: string;
 };
 
 export async function SignInRequest(data: SignInRequestData) {
@@ -83,6 +86,7 @@ export async function recoverUserInformation() {
       email: user.email,
       role: user.role,
       isActive: user.is_active,
+      genre: user.genre,
     },
   };
 }
@@ -93,6 +97,7 @@ export async function registerUser(user: UserType) {
     email: user.email,
     role: user.role,
     password: user.password,
+    genre: user.genre,
   });
 
   const { code, message } = response.data;
@@ -222,13 +227,16 @@ export async function registerContact(data: ContactType, caseId: number) {
     email: data.email,
     phone: data.phone,
     caseId,
+    age: data.age,
+    genre: data.genre,
   });
 
-  const { code, message } = response.data;
+  const { code, message, contact } = response.data;
 
   return {
     code,
     message,
+    contact,
   };
 }
 

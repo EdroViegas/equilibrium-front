@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
@@ -6,7 +6,7 @@ import { parseCookies } from "nookies";
 import Link from "next/link";
 import { ArrowCircleLeft } from "heroicons-react";
 import Router from "next/router";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
 import { notifyError } from "../../helpers/helper_functions";
@@ -16,28 +16,49 @@ import {
   registerUser,
   UserType,
 } from "../../services/services";
+import { toastStyle } from "../../helpers/defaults";
 
 export default function AddCase() {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit } = useForm();
+  const [isInserting, setIsInserting] = useState(false);
 
   async function handleRegister(user: UserType) {
-    console.log(user);
-
     if (user.password !== user.confirm_password) {
       notifyError("A palavra passe deve ser igual a confirmação! ");
 
       return;
     }
 
-    const { code, message } = await registerUser(user);
+    setIsInserting(true);
+    toast
+      .promise(
+        registerUser(user),
+        {
+          loading: "Inserindo novo usuário ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível realizar o seu pedido",
+        },
+        {
+          success: toastStyle,
+        }
+      )
+      .then((result) => {
+        const { code, message } = result;
 
-    console.log(message);
-    if (code === "SUCCESS") {
-      Router.push("/users");
-    } else {
-      notifyError(message);
-    }
+        setIsInserting(false);
+
+        if (code === "SUCCESS") {
+          Router.push(`/users`);
+        } else {
+          notifyError(message);
+        }
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
   }
 
   return (
@@ -92,18 +113,35 @@ export default function AddCase() {
                 />
               </div>
             </div>
-
-            <div className="text-sm">
-              <select
-                {...register("role")}
-                id="role"
-                name="role"
-                required
-                className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              >
-                <option value="funcionário">Funcionário</option>
-                <option value="administrador">Administrador</option>
-              </select>
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <select
+                  {...register("role")}
+                  id="role"
+                  name="role"
+                  required
+                  className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                >
+                  <option value="funcionário">Funcionário</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </div>
+              <div className="text-sm">
+                <select
+                  defaultValue={"DEFAULT"}
+                  {...register("genre")}
+                  id="genre"
+                  name="genre"
+                  required
+                  className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                >
+                  <option value="DEFAULT" disabled>
+                    Gênero{" "}
+                  </option>
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                </select>
+              </div>
             </div>
 
             <div className="text-sm">
@@ -132,7 +170,12 @@ export default function AddCase() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={` group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md  ${
+                  !isInserting
+                    ? "text-white bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-black text-gray-400 cursor-not-allowed"
+                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                disabled={isInserting}
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
                 Adicionar

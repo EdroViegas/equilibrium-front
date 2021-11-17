@@ -30,7 +30,7 @@ export default function Cases() {
   const isCurrentUser = (id: number) => isAdmin && id === user.id;
 
   function fillUsers(state: any) {
-    const result = toast
+    toast
       .promise(
         getUsers(api),
         {
@@ -80,23 +80,44 @@ export default function Cases() {
     }
   }
 
-  async function handleDeleteUser(userId: number, canDelete: Boolean) {
+  function handleDeleteUser(userId: number, canDelete: Boolean) {
     if (canDelete) {
       const answer = confirm("Deseja realmente eliminar o usuário  ? ");
 
       if (answer) {
         try {
-          const { code, message } = await removeUser(userId);
+          toast
+            .promise(
+              removeUser(userId),
+              {
+                loading: "Eliminando usuário ...",
+                success: () => <span>...</span>,
+                error:
+                  "Ocorreu um erro , não foi possível realizar o seu pedido",
+              },
+              {
+                success: toastStyle,
+              }
+            )
+            .then((result) => {
+              const { code, message } = result;
 
-          if (code === "SUCCESS") {
-            fillUsers(setUsers);
-            notify(message);
-          } else {
-            notifyError(message);
-          }
+              if (code === "SUCCESS") {
+                fillUsers(setUsers);
+                notify(message);
+              } else {
+                notifyError(message);
+              }
+            })
+            .catch((error) => {
+              // Getting the Error details.
+              console.error(error.message);
+              return error.message;
+            });
         } catch (error) {
           console.log(error);
-          notifyError("Ocorreu um erro ao eliminar contacto");
+          notifyError("Ocorreu um erro ao eliminar usuário");
+          return error;
         }
       }
     }
@@ -197,7 +218,8 @@ export default function Cases() {
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               {user.name}
                             </td>
-                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
+
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light   text-indigo-600 ">
                               {user.email}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">

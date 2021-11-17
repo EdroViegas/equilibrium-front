@@ -115,7 +115,8 @@ export default function Cases() {
           });
       } catch (error) {
         console.log(error);
-        notifyError("Ocorreu um erro ao eliminar casocls");
+        notifyError("Ocorreu um erro ao eliminar caso");
+        return error;
       }
     }
   }
@@ -170,7 +171,7 @@ export default function Cases() {
                     onClick={() => removeSearching()}
                     className={!isSearching ? "hidden" : "block"}
                   >
-                    <XSolid className="text-red-400 hover:text-red-600  h-6 hover:text-gray-800" />
+                    <XSolid className="text-red-400 hover:text-red-600  h-6 " />
                   </a>
                 </div>
               </div>

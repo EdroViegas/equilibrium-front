@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Head from "next/head";
 import Router from "next/router";
 import { useForm } from "react-hook-form";
@@ -15,20 +15,54 @@ import TopMenu from "../../../components/menu";
 import { getAPIClient } from "../../../services/axios";
 import { ArrowCircleLeft } from "heroicons-react";
 import Link from "next/link";
+import { notifyError } from "../../../helpers/helper_functions";
+import toast, { Toaster } from "react-hot-toast";
+import { toastStyle } from "../../../helpers/defaults";
 
 export default function AddCase({ caso }: any) {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit } = useForm();
+  const [isInserting, setIsInserting] = useState(false);
 
-  async function handleRegister(data: ContactType) {
-    console.log(data);
-
+  function handleRegister(data: ContactType) {
+    /*
     const { code, message } = await registerContact(data, caso.id as number);
 
     console.log(message);
     if (code === "SUCCESS") {
       Router.push(`/cases/${caso.id}`);
     }
+  */
+    setIsInserting(true);
+
+    toast
+      .promise(
+        registerContact(data, caso.id as number),
+        {
+          loading: "Inserindo novo contacto ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível realizar o seu pedido",
+        },
+        {
+          success: toastStyle,
+        }
+      )
+      .then((result) => {
+        const { code, message } = result;
+
+        setIsInserting(false);
+
+        if (code === "SUCCESS") {
+          Router.push(`/cases/${caso.id}`);
+        } else {
+          notifyError(message);
+        }
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
   }
 
   return (
@@ -37,6 +71,7 @@ export default function AddCase({ caso }: any) {
         <title>Novo contacto</title>
       </Head>
       <TopMenu user={user} />
+      <Toaster />
 
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 ">
@@ -80,6 +115,40 @@ export default function AddCase({ caso }: any) {
                   placeholder="Nome"
                 />
               </div>
+              <div className="flex items-center justify-between">
+                <div className="">
+                  <label htmlFor="age" className="sr-only">
+                    Idade
+                  </label>
+                  <input
+                    {...register("age")}
+                    id="age"
+                    name="age"
+                    type="number"
+                    autoComplete="current-age"
+                    required
+                    className="appearance-none  rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Idade"
+                  />
+                </div>
+
+                <div className="text-sm">
+                  <select
+                    defaultValue={"DEFAULT"}
+                    {...register("genre")}
+                    id="genre"
+                    name="genre"
+                    required
+                    className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  >
+                    <option value="DEFAULT" disabled>
+                      Gênero{" "}
+                    </option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                  </select>
+                </div>
+              </div>
 
               <div className="text-sm">
                 <input
@@ -110,9 +179,13 @@ export default function AddCase({ caso }: any) {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={` group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md  ${
+                  !isInserting
+                    ? "text-white bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-black text-gray-400 cursor-not-allowed"
+                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                disabled={isInserting}
               >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
                 Adicionar
               </button>
             </div>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
 import {
@@ -16,17 +16,42 @@ import {
 import { getAPIClient } from "../../services/axios";
 import { getCase, removeContact } from "../../services/services";
 import { api } from "../../services/api";
+import { toastStyle } from "../../helpers/defaults";
 
 export default function Case({ caso }: any) {
   const { user } = useContext(AuthContext);
   const [contatcs, setContacts] = useState(caso.contact);
 
-  async function handleDeleteContact(contactId: number, caseId = caso.id) {
+  function fillContacts(state: any) {
+    toast
+      .promise(
+        getCase(api, caso.id),
+        {
+          loading: "Carregando contactos ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível listar contactos",
+        },
+        {
+          success: toastStyle,
+        }
+      )
+      .then((result) => {
+        const { contact } = result;
+        state(contact);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
+  }
+
+  function handleDeleteContact(contactId: number, caseId = caso.id) {
     const answer = confirm("Deseja realmente apagar o contacto ?");
 
     console.log(answer);
     if (answer) {
-      try {
+      /* try {
         const { code, message } = await removeContact(contactId);
         console.log(code, message);
 
@@ -41,6 +66,40 @@ export default function Case({ caso }: any) {
       } catch (error) {
         console.log(error);
         notifyError("Ocorreu um erro ao eliminar contacto");
+      }*/
+
+      try {
+        toast
+          .promise(
+            removeContact(contactId),
+            {
+              loading: "Eliminando contacto ...",
+              success: () => <span>...</span>,
+              error: "Ocorreu um erro , não foi possível realizar o seu pedido",
+            },
+            {
+              success: toastStyle,
+            }
+          )
+          .then((result) => {
+            const { code, message } = result;
+
+            if (code === "SUCCESS") {
+              fillContacts(setContacts);
+              notify(message);
+            } else {
+              notifyError(message);
+            }
+          })
+          .catch((error) => {
+            // Getting the Error details.
+            console.error(error.message);
+            return error.message;
+          });
+      } catch (error) {
+        console.log(error);
+        notifyError("Ocorreu um erro ao eliminar contacto");
+        return error;
       }
     }
   }
@@ -151,11 +210,17 @@ export default function Case({ caso }: any) {
                           className=" object-cover  rounded-full   shadow-md "
                         />
                       </div>
-                      <div className="text-xs font-bold text-indigo-400 ">
+                      <div className="text-xs font-bold text-indigo-400 uppercase ">
                         <h2>{contact.name}</h2>
                       </div>
                     </div>
-                    <div className="text-sm font-light ">
+                    <div className="text-xs  ">
+                      <h2>{contact.age} ano (s)</h2>
+                    </div>
+                    <div className="text-xs  uppercase  ">
+                      <h2>{contact.genre}</h2>
+                    </div>
+                    <div className="text-sm font-light text-indigo-600 ">
                       <h2>{contact.email}</h2>
                     </div>
 
