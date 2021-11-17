@@ -31,7 +31,7 @@ export default function Cases() {
   }
 
   function fillCases(state: any) {
-    const result = toast
+    toast
       .promise(
         getCases(api),
         {
@@ -55,9 +55,7 @@ export default function Cases() {
   }
 
   function handleSearch(data: any) {
-    console.log(data);
-
-    const result = toast
+    toast
       .promise(
         searchCase(api, data),
         {
@@ -188,6 +186,19 @@ export default function Cases() {
                         >
                           Nome
                         </th>
+
+                        <th
+                          scope="col"
+                          className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Idade
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Gênero
+                        </th>
                         <th
                           scope="col"
                           className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
@@ -241,6 +252,12 @@ export default function Cases() {
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               {caseInfo.name}
+                            </td>
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
+                              {caseInfo.age}
+                            </td>
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
+                              {caseInfo.genre}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
                               {caseInfo.address}

@@ -15,6 +15,8 @@ export type CaseType = {
   place: string;
   testDate: string;
   testType: string;
+  age: number;
+  genre: string;
 };
 
 export type ContactType = {
@@ -152,14 +154,17 @@ export async function registerCase(data: CaseType, userId: number) {
     place: data.place,
     testDate: data.testDate,
     testType: data.testType,
+    age: data.age,
+    genre: data.genre,
     userId,
   });
 
-  const { code, message } = response.data;
+  const { code, message, caso } = response.data;
 
   return {
     code,
     message,
+    caso,
   };
 }
 

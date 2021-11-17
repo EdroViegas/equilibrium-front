@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Head from "next/head";
 import Router from "next/router";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import { useForm } from "react-hook-form";
@@ -9,19 +10,57 @@ import { ArrowCircleLeft } from "heroicons-react";
 import TopMenu from "../../components/menu";
 import { AuthContext } from "../../contexts/context";
 import { CaseType, registerCase } from "../../services/services";
+import { toastStyle } from "../../helpers/defaults";
+import { notifyError } from "../../helpers/helper_functions";
 
 export default function AddCase() {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit } = useForm();
+  const [isInserting, setIsInserting] = useState(false);
 
   async function handleRegister(data: CaseType) {
     console.log(data);
-    const { code, message } = await registerCase(data, user?.id as number);
+
+    /* const { code, message, caso } = await registerCase(
+      data,
+      user?.id as number
+    );
 
     console.log(message);
     if (code === "SUCCESS") {
-      Router.push("/cases");
-    }
+      Router.push(`/cases/${caso.id}`);
+    } */
+
+    setIsInserting(true);
+
+    toast
+      .promise(
+        registerCase(data, user?.id as number),
+        {
+          loading: "Inserindo novo caso ...",
+          success: () => <span>...</span>,
+          error: "Ocorreu um erro , não foi possível realizar o seu pedido",
+        },
+        {
+          success: toastStyle,
+        }
+      )
+      .then((result) => {
+        const { code, message, caso } = result;
+
+        setIsInserting(false);
+
+        if (code === "SUCCESS") {
+          // Router.push(`/cases/${caso.id}`);
+        } else {
+          notifyError(message);
+        }
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.error(error.message);
+        return error.message;
+      });
   }
 
   return (
@@ -30,6 +69,7 @@ export default function AddCase() {
         <title>Novo caso positivo</title>
       </Head>
       <TopMenu user={user} page={"cases"} />
+      <Toaster />
 
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 ">
@@ -60,6 +100,40 @@ export default function AddCase() {
                   placeholder="Nome"
                 />
               </div>
+              <div className="flex items-center justify-between">
+                <div className="">
+                  <label htmlFor="age" className="sr-only">
+                    Idade
+                  </label>
+                  <input
+                    {...register("age")}
+                    id="age"
+                    name="age"
+                    type="number"
+                    autoComplete="current-age"
+                    required
+                    className="appearance-none  rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Idade"
+                  />
+                </div>
+
+                <div className="text-sm">
+                  <select
+                    defaultValue={"DEFAULT"}
+                    {...register("genre")}
+                    id="genre"
+                    name="genre"
+                    required
+                    className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  >
+                    <option value="DEFAULT" disabled>
+                      Gênero{" "}
+                    </option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                  </select>
+                </div>
+              </div>
               <div>
                 <label htmlFor="address" className="sr-only">
                   Endereço
@@ -75,6 +149,7 @@ export default function AddCase() {
                   placeholder="Endereço"
                 />
               </div>
+
               <div className="text-sm">
                 <input
                   {...register("email")}
@@ -109,12 +184,16 @@ export default function AddCase() {
               <div className="text-sm">
                 <select
                   {...register("testType")}
+                  defaultValue={"DEFAULT"}
                   id="testType"
                   name="testType"
                   required
                   className="appearance-none  rounded-md relative block w-full px-7 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="E-mail"
                 >
+                  <option value="DEFAULT" disabled>
+                    Tipo de teste
+                  </option>
                   <option value="RT-PCR">RT-PCR</option>
                   <option value="TDR Antigeno (Ags)">TDR Antigeno (Ags)</option>
                 </select>
@@ -152,9 +231,13 @@ export default function AddCase() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={` group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md  ${
+                  !isInserting
+                    ? "text-white bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-black text-gray-400"
+                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                disabled={isInserting}
               >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
                 Adicionar
               </button>
             </div>
