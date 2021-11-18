@@ -121,13 +121,15 @@ export default function Case({ caso }: any) {
           <div className="     md:col-span-2 xl:flex md:flex-col justify-center items-center  bg-workcation-200">
             <div className="flex  flex-col justify-center items-center">
               <div className=" -mt-10  ">
-                <div className="border-4 border-gray-50 rounded-full">
+                <div className="border-4 border-gray-50 rounded-full ">
                   <Image
-                    src="/img/1.jpg"
+                    src={`/img/${
+                      caso?.genre === "femenino" ? "female.jpg" : "male.jpg"
+                    }`}
                     height={80}
                     width={80}
                     alt="Recipe"
-                    className=" object-cover  rounded-full   shadow-md "
+                    className=" object-cover  rounded-full   shadow-md  "
                   />
                 </div>
               </div>
@@ -154,6 +156,25 @@ export default function Case({ caso }: any) {
             </div>
 
             <div className=" flex flex-col p-2 mt-10 bg-white min-w-full rounded-sm border border-gray-100  ">
+              <div className="flex flex-row justify-between w-full border-b  border-gray-300 mb-2  py-2">
+                <h1 className=" text-xs text-gray-400  uppercase ">
+                  Gênero:{" "}
+                  <span
+                    className={`text-xs text-${
+                      caso.genre === "femenino" ? "red" : "indigo"
+                    }-400`}
+                  >
+                    {" "}
+                    {caso.genre}{" "}
+                  </span>
+                </h1>
+                <h1 className=" text-xs text-gray-500 font-light uppercase ">
+                  IDADE:{" "}
+                  <span className="text-gray-700 font-medium">
+                    {caso.age} Ano(s)
+                  </span>
+                </h1>
+              </div>
               <div>
                 <h1 className=" text-xs text-gray-400  uppercase ">
                   Local do teste
@@ -188,7 +209,7 @@ export default function Case({ caso }: any) {
             <div className="flex flex-row  justify-between mb-4 border-b border-gray-300 pb-2">
               <h2 className="uppercase">
                 Contactos diretos do caso positivo (
-                <span className="text-indigo-600">{caso.contact.length}</span> )
+                <span className="text-indigo-600">{caso.contact.length}</span>)
               </h2>
               <Link href={`/contact/add/${caso.id}`}>
                 <a className="mr-4 transition duration-500 ease-in-out bg-gray-600  hover:bg-black transform hover:-translate-y-1 hover:scale-110   px-2 py-1  text-white text-xs font-medium   rounded-md uppercase  cursor-pointer ">
@@ -200,24 +221,28 @@ export default function Case({ caso }: any) {
               return (
                 <Fragment key={contact.id}>
                   <div className="flex flex-row items-center justify-between gap-x-4 h-12 mb-3 bg-white border border-gray hover:border-blue-600 shadow-sm  pb-1  rounded transition duration-500 ease-in-out  transform hover:-translate-y-2 hover:scale-25 hover:shadow-lg ">
-                    <div className="flex flex-row items-center gap-x-4">
-                      <div className="ml-4 mt-1 ">
+                    <div className="flex flex-row items-center gap-x-1">
+                      <div className="ml-2 mt-1 ">
                         <Image
-                          src="/img/1.jpg"
+                          src={`/img/${
+                            contact?.genre === "femenino"
+                              ? "female.jpg"
+                              : "male.jpg"
+                          }`}
                           height={35}
                           width={35}
                           alt="Recipe"
                           className=" object-cover  rounded-full   shadow-md "
                         />
                       </div>
-                      <div className="text-xs font-bold text-indigo-400 uppercase ">
+                      <div className="text-xs font-medium text-indigo-400 uppercase ">
                         <h2>{contact.name}</h2>
                       </div>
                     </div>
                     <div className="text-xs  ">
                       <h2>{contact.age} ano (s)</h2>
                     </div>
-                    <div className="text-xs  uppercase  ">
+                    <div className="text-xs font-medium ">
                       <h2>{contact.genre}</h2>
                     </div>
                     <div className="text-sm font-light text-indigo-600 ">

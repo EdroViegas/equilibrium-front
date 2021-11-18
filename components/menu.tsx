@@ -11,6 +11,8 @@ import Router from "next/router";
 export default function TopMenu({ user, page }: any) {
   const isAdmin = user?.role === "administrador";
 
+  console.log(`USER GENRE IS : ${user?.genre}`);
+
   const handleLogout = async () => {
     try {
       destroyCookie(null, "equilibrium.token");
@@ -92,7 +94,11 @@ export default function TopMenu({ user, page }: any) {
                             </span>
 
                             <Image
-                              src="/img/male.png"
+                              src={`/img/${
+                                user?.genre === "femenino"
+                                  ? "female.png"
+                                  : "male.png"
+                              }`}
                               height={35}
                               width={35}
                               alt="Recipe"
@@ -171,7 +177,9 @@ export default function TopMenu({ user, page }: any) {
               <div className="flex items-center px-5">
                 <div className="flex-shrink-0">
                   <Image
-                    src="/img/male.png"
+                    src={`/img/${
+                      user?.genre === "femenino" ? "female.png" : "male.png"
+                    }`}
                     height={35}
                     width={35}
                     alt="Recipe"

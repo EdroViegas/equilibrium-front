@@ -272,7 +272,7 @@ export default function Cases() {
                               {caseInfo.name}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
-                              {caseInfo.age}
+                              {caseInfo.age} ano (s)
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light  uppercase text-black">
                               {caseInfo.genre}
