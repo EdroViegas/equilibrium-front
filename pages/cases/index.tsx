@@ -253,6 +253,13 @@ export default function Cases() {
                           scope="col"
                           className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                         >
+                          Contactos
+                        </th>
+
+                        <th
+                          scope="col"
+                          className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                        >
                           Actions
                         </th>
                       </tr>
@@ -292,6 +299,9 @@ export default function Cases() {
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-light   uppercase text-black">
                               {formatDate(caseInfo.test_date)}
+                            </td>
+                            <td className="px-2 py-4 whitespace-nowrap text-xs font-medium text-center   uppercase text-black">
+                              {caseInfo.contact.length}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
                               <Link href={`/cases/${caseInfo.id}`}>
