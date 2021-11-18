@@ -301,7 +301,7 @@ export default function Cases() {
                               {formatDate(caseInfo.test_date)}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-xs font-medium text-center   uppercase text-black">
-                              {caseInfo.contact.length}
+                              {caseInfo.contact?.length}
                             </td>
                             <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
                               <Link href={`/cases/${caseInfo.id}`}>
