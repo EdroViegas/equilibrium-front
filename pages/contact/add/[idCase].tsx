@@ -88,7 +88,7 @@ export default function AddCase({ caso }: any) {
             <div className=" flex gap-x-2 items-center  border-gray-400 p-1 rounded bg-gray-100 shadow-sm">
               <Image
                 src={`/img/${
-                  caso?.genre === "femenino" ? "female.jpg" : "male.jpg"
+                  caso?.genre === "feminino" ? "female.jpg" : "male.jpg"
                 }`}
                 height={35}
                 width={35}
@@ -147,7 +147,7 @@ export default function AddCase({ caso }: any) {
                       Gênero{" "}
                     </option>
                     <option value="masculino">Masculino</option>
-                    <option value="femenino">Feminino</option>
+                    <option value="feminino">Feminino</option>
                   </select>
                 </div>
               </div>

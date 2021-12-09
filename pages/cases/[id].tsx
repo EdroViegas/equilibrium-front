@@ -124,7 +124,7 @@ export default function Case({ caso }: any) {
                 <div className="border-4 border-gray-50 rounded-full ">
                   <Image
                     src={`/img/${
-                      caso?.genre === "femenino" ? "female.jpg" : "male.jpg"
+                      caso?.genre === "feminino" ? "female.jpg" : "male.jpg"
                     }`}
                     height={80}
                     width={80}
@@ -161,7 +161,7 @@ export default function Case({ caso }: any) {
                   Gênero:{" "}
                   <span
                     className={`text-xs text-${
-                      caso.genre === "femenino" ? "red" : "indigo"
+                      caso.genre === "feminino" ? "red" : "indigo"
                     }-400`}
                   >
                     {" "}
@@ -225,7 +225,7 @@ export default function Case({ caso }: any) {
                       <div className="ml-2 mt-1 ">
                         <Image
                           src={`/img/${
-                            contact?.genre === "femenino"
+                            contact?.genre === "feminino"
                               ? "female.jpg"
                               : "male.jpg"
                           }`}
