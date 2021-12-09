@@ -147,7 +147,7 @@ export default function AddCase({ caso }: any) {
                       Gênero{" "}
                     </option>
                     <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
+                    <option value="femenino">Feminino</option>
                   </select>
                 </div>
               </div>

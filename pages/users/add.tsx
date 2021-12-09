@@ -139,7 +139,7 @@ export default function AddCase() {
                     Gênero{" "}
                   </option>
                   <option value="masculino">Masculino</option>
-                  <option value="femenino">Femenino</option>
+                  <option value="femenino">Feminino</option>
                 </select>
               </div>
             </div>
